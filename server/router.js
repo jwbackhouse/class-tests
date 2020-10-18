@@ -5,8 +5,8 @@ const controller = require('./controller.js');
 const router = new express.Router();
 
 router.get('/student/:studentId', controller.studentTests_get);
+router.post('/student/:studentId/:testId', controller.test_post);
 router.get('/test/:testId', controller.test_get);
-router.post('/test', controller.test_post);
 
 router.get('/teacher', controller.allTests_get);
 router.post('/teacher/toggle-live', controller.toggleLive_post);

@@ -2,34 +2,34 @@ const db = require('./db.js');
 // const { validationResult } = require('express-validator');
 
 // Students
-exports.studentTests_get = async (req, res) => {
+exports.studentTests_get = async(req, res) => {
   const studentId = req.params.studentId;
 
   let testArr = [];
 
   // Get live tests only
   db.collection('tests')
-  .where('live', '==', true)
-  .get()
-  .then(querySnapshot => {
-    const resultArr = querySnapshot.docs;
+    .where('live', '==', true)
+    .get()
+    .then(querySnapshot => {
+      const resultArr = querySnapshot.docs;
 
-    for (let i = 0; i < resultArr.length; i++) {
-      // Pass completed flag alongside full data object
-      const allStudentIds = Object.keys(resultArr[i].data().studentsCompleted);
-      const completed = allStudentIds.includes(studentId);
+      for (let i = 0; i < resultArr.length; i++) {
+        // Pass completed flag alongside full data object
+        const allStudentIds = Object.keys(resultArr[i].data().studentsCompleted);
+        const completed = allStudentIds.includes(studentId);
 
-      testArr.push({
+        testArr.push({
         [`test${i}`]: resultArr[i].data(),
-        completed,
-      });
-    }
-  res.send(testArr);
-  })
-  .catch(error => {
-    console.log('Error fetching test list in studentTests_get(): ', error);
-    res.status(404).send();
-  });
+          completed,
+        });
+      }
+      res.send(testArr);
+    })
+    .catch(error => {
+      console.log('Error fetching test list in studentTests_get(): ', error);
+      res.status(404).send();
+    });
 };
 
 exports.test_get = (req, res) => {
@@ -59,10 +59,23 @@ exports.test_post = (req, res) => {
   // if (!errors.isEmpty()) {
   //   return res.status(400).json({ errors: errors.array() });
   // }
+  const answers = req.body.answers;
+  const testId = req.params.testId;
+  const studentId = req.params.studentId;
 
-
-
-}
+  db.collection('tests').doc(testId).set({
+      studentsCompleted: {
+      [studentId]: {
+          answers,
+        },
+      },
+    }, { merge: true })
+    .then(() => res.send())
+    .catch(err => {
+      console.log('Error posting answers in test_post()', err);
+      res.status(500).send();
+    });
+};
 
 
 // Teachers
@@ -70,18 +83,18 @@ exports.allTests_get = (req, res) => {
   let testArr = [];
 
   db.collection('tests')
-  .get()
-  .then(querySnapshot => {
-    querySnapshot.forEach(test => {
-      testArr.push(test.data());
-    });
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(test => {
+        testArr.push(test.data());
+      });
 
-    res.send(testArr);
-  })
-  .catch(error => {
-    console.log('Error fetching tests in allTests_get(): ', error);
-    res.status(404).send();
-  });
+      res.send(testArr);
+    })
+    .catch(error => {
+      console.log('Error fetching tests in allTests_get(): ', error);
+      res.status(404).send();
+    });
 };
 
 exports.toggleLive_post = (req, res) => {
@@ -92,8 +105,8 @@ exports.toggleLive_post = (req, res) => {
       const currentState = doc.data().live;
 
       doc.ref.update({
-        live: !currentState,
-      })
+          live: !currentState,
+        })
         .then(() => res.send())
         .catch(err => {
           console.log('Error toggling live status in toggleLive_post():', err);
@@ -106,7 +119,7 @@ exports.toggleLive_post = (req, res) => {
     });
 };
 
-exports.addTest_post = (req, res)=> {
+exports.addTest_post = (req, res) => {
   const testBody = req.body;
 
   const newTest = {

@@ -3,38 +3,33 @@ const db = require('./db.js');
 
 // Students
 exports.studentTests_get = async (req, res) => {
-  try {
-    const studentId = req.params.studentId;
+  const studentId = req.params.studentId;
 
-    let testArr = [];
+  let testArr = [];
 
-    // Get live tests only
-    db.collection("tests")
-    .where('live', '==', true)
-    .get()
-    .then((querySnapshot) => {
-      const resultArr = querySnapshot.docs;
+  // Get live tests only
+  db.collection("tests")
+  .where('live', '==', true)
+  .get()
+  .then((querySnapshot) => {
+    const resultArr = querySnapshot.docs;
 
-      for (let i = 0; i < resultArr.length; i++) {
-        // Pass completed flag alongside full data object
-        const allStudentIds = Object.keys(resultArr[i].data().studentsCompleted);
-        const completed = allStudentIds.includes(studentId);
+    for (let i = 0; i < resultArr.length; i++) {
+      // Pass completed flag alongside full data object
+      const allStudentIds = Object.keys(resultArr[i].data().studentsCompleted);
+      const completed = allStudentIds.includes(studentId);
 
-        testArr.push({
-          [`test${i}`]: resultArr[i].data(),
-          completed,
-        });
-      }
-    res.send(testArr);
-    })
-    .catch(error => {
-      console.log('Error fetching test list from db: ', error);
-      res.status(404).send();
-    });
-  } catch (err) {
-    console.log('Error in studentTests_get():', err);
+      testArr.push({
+        [`test${i}`]: resultArr[i].data(),
+        completed,
+      });
+    }
+  res.send(testArr);
+  })
+  .catch(error => {
+    console.log('Error fetching test list from db: ', error);
     res.status(404).send();
-  }
+  });
 };
 
 exports.test_get = (req, res) => {

@@ -8,10 +8,10 @@ exports.studentTests_get = async (req, res) => {
   let testArr = [];
 
   // Get live tests only
-  db.collection("tests")
+  db.collection('tests')
   .where('live', '==', true)
   .get()
-  .then((querySnapshot) => {
+  .then(querySnapshot => {
     const resultArr = querySnapshot.docs;
 
     for (let i = 0; i < resultArr.length; i++) {
@@ -27,7 +27,7 @@ exports.studentTests_get = async (req, res) => {
   res.send(testArr);
   })
   .catch(error => {
-    console.log('Error fetching test list from db: ', error);
+    console.log('Error fetching test list in studentTests_get(): ', error);
     res.status(404).send();
   });
 };
@@ -48,7 +48,7 @@ exports.test_get = (req, res) => {
       res.send(responseObj);
     })
     .catch(err => {
-      console.log('Error retrieving test in test_get():', err);
+      console.log('Error fetching test in test_get():', err);
       res.status(404).send();
     });
 };
@@ -64,7 +64,21 @@ exports.test_post = (req, res) => {
 
 // Teachers
 exports.allTests_get = (req, res) => {
+  let testArr = [];
 
+  db.collection('tests')
+  .get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(test => {
+      testArr.push(test.data());
+    });
+
+    res.send(testArr);
+  })
+  .catch(error => {
+    console.log('Error fetching tests in allTests_get(): ', error);
+    res.status(404).send();
+  });
 };
 
 exports.setLive_post = (req, res) => {

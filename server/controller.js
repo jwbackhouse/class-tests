@@ -59,6 +59,9 @@ exports.test_post = (req, res) => {
   // if (!errors.isEmpty()) {
   //   return res.status(400).json({ errors: errors.array() });
   // }
+
+
+
 }
 
 
@@ -86,5 +89,21 @@ exports.setLive_post = (req, res) => {
 }
 
 exports.addTest_post = (req, res)=> {
+  const testBody = req.body;
 
-}
+  const newTest = {
+    title: testBody.title,
+    questions: testBody.questions,
+    live: testBody.live,
+  };
+
+  db.collection('tests').add(newTest)
+    .then(docRef => {
+      console.log(`Document written successfully with ID: ${docRef.id}`);
+      res.send(newTest);
+    })
+    .catch(err => {
+      console.error('Error adding test in addTest_post(): ', err);
+      res.status(500).send();
+    });
+};

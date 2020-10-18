@@ -10,7 +10,7 @@ router.post('/test', controller.test_post);
 
 router.get('/teacher', controller.allTests_get);
 router.post('/teacher', controller.setLive_post);
-router.post('./add', controller.addTest_post);
+router.post('/add', controller.addTest_post);
 
 
 module.exports = router;

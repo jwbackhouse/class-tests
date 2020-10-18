@@ -1,7 +1,7 @@
 // All variables now available under process.env.<NAME>
 const dotenv = require('dotenv').config();
 const express = require('express');
-const router = require('./src/routers/router.js');
+const router = require('./router.js');
 
 const port = process.env.PORT || 8080;
 

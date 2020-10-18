@@ -1,8 +1,14 @@
 const db = require('./db.js');
-// const { validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 // Students
 exports.studentTests_get = async(req, res) => {
+  // Handle errors from express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: errors.array() });
+  }
+
   const studentId = req.params.studentId;
 
   let testArr = [];
@@ -16,8 +22,13 @@ exports.studentTests_get = async(req, res) => {
 
       for (let i = 0; i < resultArr.length; i++) {
         // Pass completed flag alongside full data object
-        const allStudentIds = Object.keys(resultArr[i].data().studentsCompleted);
-        const completed = allStudentIds.includes(studentId);
+        const studentsCompleted = resultArr[i].data().studentsCompleted;
+
+        let completed = false;
+        if (studentsCompleted) {
+          const allStudentIds = Object.keys(studentsCompleted);
+          completed = allStudentIds.includes(studentId);
+        }
 
         testArr.push({
         [`test${i}`]: resultArr[i].data(),
@@ -33,6 +44,12 @@ exports.studentTests_get = async(req, res) => {
 };
 
 exports.test_get = (req, res) => {
+  // Handle errors from express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: errors.array() });
+  }
+
   const testId = req.params.testId;
 
   db.collection('tests').doc(testId).get()
@@ -54,11 +71,12 @@ exports.test_get = (req, res) => {
 };
 
 exports.test_post = (req, res) => {
-  // // Handle errors from express-validator
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.array() });
-  // }
+  // Handle errors from express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: errors.array() });
+  }
+
   const answers = req.body.answers;
   const testId = req.params.testId;
   const studentId = req.params.studentId;
@@ -98,6 +116,12 @@ exports.allTests_get = (req, res) => {
 };
 
 exports.toggleLive_post = (req, res) => {
+  // Handle errors from express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: errors.array() });
+  }
+
   const testId = req.body.testId;
 
   db.collection('tests').doc(testId).get()
@@ -120,6 +144,12 @@ exports.toggleLive_post = (req, res) => {
 };
 
 exports.addTest_post = (req, res) => {
+  // Handle errors from express-validator
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(500).json({ errors: errors.array() });
+  }
+
   const testBody = req.body;
 
   const newTest = {

@@ -38,8 +38,25 @@ exports.studentTests_get = async (req, res) => {
 };
 
 exports.test_get = (req, res) => {
+  const testId = req.params.testId;
 
-}
+  db.collection('tests').doc(testId).get()
+    .then(doc => {
+      const docObj = doc.data();
+
+      // Limit fields to return
+      const responseObj = {
+        title: docObj.title,
+        questions: docObj.questions,
+      };
+
+      res.send(responseObj);
+    })
+    .catch(err => {
+      console.log('Error retrieving test in test_get():', err);
+      res.status(404).send();
+    });
+};
 
 exports.test_post = (req, res) => {
   // // Handle errors from express-validator

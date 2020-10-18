@@ -4,12 +4,13 @@ const controller = require('./controller.js');
 
 const router = new express.Router();
 
-router.get('/student.html', controller.student_tests_get);
-router.get('/student.html/:testId', controller.test_get);
-router.post('/test.html', controller.test_post);
+router.get('/student/:studentId', controller.studentTests_get);
+router.get('/test/:testId', controller.test_get);
+router.post('/test', controller.test_post);
 
-router.get('/teacher.html', controller.all_tests_get);
-router.post('/teacher.html', controller.set_live_post);
-router.post('./add.html', controller.add_test_post);
+router.get('/teacher', controller.allTests_get);
+router.post('/teacher', controller.setLive_post);
+router.post('./add', controller.addTest_post);
+
 
 module.exports = router;

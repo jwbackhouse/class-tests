@@ -84,9 +84,27 @@ exports.allTests_get = (req, res) => {
   });
 };
 
-exports.setLive_post = (req, res) => {
+exports.toggleLive_post = (req, res) => {
+  const testId = req.body.testId;
 
-}
+  db.collection('tests').doc(testId).get()
+    .then(doc => {
+      const currentState = doc.data().live;
+
+      doc.ref.update({
+        live: !currentState,
+      })
+        .then(() => res.send())
+        .catch(err => {
+          console.log('Error toggling live status in toggleLive_post():', err);
+          res.status(500).send();
+        });
+    })
+    .catch(err => {
+      console.log('Error getting test data in toggleLive_post():', err);
+      res.status(500).send();
+    });
+};
 
 exports.addTest_post = (req, res)=> {
   const testBody = req.body;

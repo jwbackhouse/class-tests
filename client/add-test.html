@@ -15,13 +15,13 @@
   <form id='test-form'>
     <label>
       Test name
-      <input type='text' name='test-title' id='test-title' placeholder='New test'/>
+      <input type='text' name='test-title' id='test-title' placeholder='New test'  required autofocus/>
     </label>
     <fieldset class='question-block'>
       <h3>Question 1</h3>
       <label>
         Title
-        <input type='text' name='q1-title' id='q1-question'/>
+        <input type='text'name='q1-title' id='q1-question' required/>
       </label>
       <label>
         Answer 1
@@ -41,7 +41,7 @@
       </label>
       <label>
         Correct answer
-        <input type='number' min=1 max=4 name='q1-correct' id='q1-correct'/>
+        <input type='number' min=1 max=4 name='q1-correct' id='q1-correct' required/>
       </label>
     </fieldset>
 

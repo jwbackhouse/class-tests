@@ -107,9 +107,9 @@ if (testForm) {
     for (let i = 1; i <= testData.questions.length; i++) {
       const radioBtns = testForm.querySelectorAll(`input[name="question${i}"]`);
 
-      for (let rb of radioBtns) {
-        if (rb.checked) {
-          answerArr.push(rb.value);
+      for (let j = 0; j < radioBtns.length; j++) {
+        if (radioBtns[j].checked) {
+          answerArr.push(j);
           break;
         }
       }

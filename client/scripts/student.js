@@ -1,8 +1,5 @@
-// Student Front-End
-
 // Assume studentId would come from auth (not implemeted in this mock-up)
 const studentId = 123;
-const urlRef = 'testId';
 
 // API requests
 const getLiveTests = () => {
@@ -37,7 +34,7 @@ if (testList) {
       data.forEach(test => {
         const li = document.createElement('li');
         const ahref = document.createElement('a');
-        ahref.setAttribute('href', `./test.html?${urlRef}=${test.testData.id}`);
+        ahref.setAttribute('href', `./test.html?testId=${test.testData.id}`);
         ahref.innerHTML = test.testData.title;
 
         li.appendChild(ahref);
@@ -52,7 +49,7 @@ if (testList) {
 const testForm = document.getElementById('test');
 if (testForm) {
   let params = (new URL(document.location)).searchParams;
-  const testId = params.get(urlRef);
+  const testId = params.get('testId');
 
   let testData;
 

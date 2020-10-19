@@ -6,7 +6,7 @@ const router = new express.Router();
 
 // NB testIds must be alphanumeric
 // studentIds must be numeric
-const titleRegex = '^[\w\s-]*$';
+const titleRegex = '^[\s-_0-9A-Za-z]*$';
 
 router.get('/student/:studentId', [
     param('studentId')
@@ -46,8 +46,9 @@ router.post('/teacher/toggle-live', [
         .isAlphanumeric()
     ], controller.toggleLive_post);
 
-router.post('/teacher/add', [
+router.post('/teacher/add',[
     body('title')
+            .trim()
         .exists()
         .escape(),
         // .matches(titleRegex),

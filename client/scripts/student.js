@@ -72,6 +72,9 @@ if (testForm) {
         answerDiv.setAttribute('class', 'answers');
 
         for (let j = 0; j < 4; j++) {
+          // Skip empty answers
+          if (!questionData.answers[j]) continue;
+
           const answer = document.createElement('input');
           answer.setAttribute('type', 'radio');
           answer.setAttribute('name', `question${i}`);

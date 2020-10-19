@@ -4,26 +4,26 @@ const { param, body } = require('express-validator');
 
 const router = new express.Router();
 
-// NB testIds must be alphanumeric
-// studentIds must be numeric
-const titleRegex = '^[\s-_0-9A-Za-z]*$';
+const testIdRegex = /[0-9A-Za-z]*$/;
+const studentIdRegex = /[0-9]*$/;
+const titleRegex = /^[\s-0-9A-Za-z]*$/;
 
 router.get('/student/:studentId', [
     param('studentId')
         .exists()
         .escape()
-        .isNumeric()
+        .matches(studentIdRegex)
     ], controller.studentTests_get);
 
 router.post('/student/:studentId/:testId', [
     param('studentId')
         .exists()
         .escape()
-        .isNumeric(),
+        .matches(studentIdRegex),
     param('testId')
         .exists()
         .escape()
-        .isAlphanumeric(),
+        .matches(testIdRegex),
     body('answers')
         .exists()
         .isArray()
@@ -33,7 +33,7 @@ router.get('/test/:testId', [
     param('testId')
         .exists()
         .escape()
-        .isAlphanumeric()
+        .matches(testIdRegex)
     ], controller.test_get);
 
 router.get('/teacher', controller.allTests_get);
@@ -42,18 +42,17 @@ router.post('/teacher/toggle-live', [
     body('testId')
         .exists()
         .escape()
-        .isAlphanumeric()
+        .matches(testIdRegex)
     ], controller.toggleLive_post);
 
 router.post('/teacher/add',[
     body('title')
             .trim()
         .exists()
-        .escape(),
-        // .matches(titleRegex),
+        .matches(titleRegex),
     body('questions')
-        .exists(),
-        // .isArray(),
+        .exists()
+        .isArray(),
     body('live')
         .exists()
         .isBoolean()

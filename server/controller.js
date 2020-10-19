@@ -108,7 +108,10 @@ exports.allTests_get = (req, res) => {
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(test => {
-        testArr.push(test.data());
+        testArr.push({
+          testId: test.id,
+          data: test.data()
+        });
       });
 
       res.send(testArr);
@@ -126,6 +129,7 @@ exports.toggleLive_post = (req, res) => {
     return res.status(500).json({ errors: errors.array() });
   }
 
+  console.log(req.body)
   const testId = req.body.testId;
 
   db.collection('tests').doc(testId).get()

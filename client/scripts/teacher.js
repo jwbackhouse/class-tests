@@ -16,15 +16,39 @@ const postNewTest = testData => {
     .catch(err => console.log('Error posting new test in postNewTest():', err));
 };
 
+function toggleLive() {
+  const testId = this.id;
+  const body = JSON.stringify({ testId });
+
+  fetch('/teacher/toggle-live', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    })
+    .then(res => console.log('Toggled successfully'))
+    .catch(err => console.log('Error toggling live status:', err));
+}
+
 
 // Dashboard page
 const testList = document.getElementById('test-list');
 if (testList) {
+  // Fetch all tests
   getAllTests()
     .then(data => {
       data.forEach(test => {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(test.title));
+        li.appendChild(document.createTextNode(`${test.data.title} - live:`));
+
+        const checkbox = document.createElement('input');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.setAttribute('class', 'toggle-live');
+        checkbox.setAttribute('id', test.testId);
+        checkbox.checked = test.data.live;
+        checkbox.addEventListener('change', toggleLive);
+
+        li.appendChild(checkbox);
+
         testList.appendChild(li);
       });
     })

@@ -37,8 +37,8 @@ if (testList) {
   getAllTests()
     .then(data => {
       data.forEach(test => {
-        const li = document.createElement('li');
-        li.appendChild(document.createTextNode(test.data.title));
+        const testTitle = document.createElement('p');
+        testTitle.appendChild(document.createTextNode(test.data.title));
 
         const checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
@@ -46,10 +46,24 @@ if (testList) {
         checkbox.setAttribute('id', test.testId);
         checkbox.checked = test.data.live;
         checkbox.addEventListener('change', toggleLive);
+        testTitle.appendChild(checkbox);
 
-        li.appendChild(checkbox);
+        if (test.data.studentsCompleted) {
+          // const studentListTitle = document.createElement('p')
+          // studentListTitle.innerHTML = 'Students who have already completed the test:';
 
-        testList.appendChild(li);
+          const studentList = document.createElement('ul');
+          const studentIdArr = Object.keys(test.data.studentsCompleted);
+          for (let id of studentIdArr) {
+            const studentId = document.createElement('li');
+            studentId.appendChild(document.createTextNode(id));
+            studentList.appendChild(studentId);
+          }
+
+          // testTitle.appendChild(studentListTitle);
+          testTitle.appendChild(studentList);
+        }
+        testList.appendChild(testTitle);
       });
     })
     .catch(err => console.log('Error rendering tests in getAllTests(): ', err));

@@ -53,8 +53,7 @@ router.post('/teacher/add',[
         .escape(),
         // .matches(titleRegex),
     body('questions')
-        .exists()
-        .escape(),
+        .exists(),
         // .isArray(),
     body('live')
         .exists()

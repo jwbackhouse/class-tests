@@ -15,7 +15,18 @@ const getSingleTest = testId => {
   return fetch(`/test/${testId}`)
     .then(res => res.json())
     .catch(err => console.log('Error fetching data in getSingleTest()', err));
-}
+};
+
+const postAnswers = (testId, answerArr) => {
+  const body = JSON.stringify({ answers: answerArr });
+  return fetch(`/student/${studentId}/${testId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    })
+    .then(() => {})
+    .catch(err => console.log('Error posting answers in postAnswers():', err));
+};
 
 
 // Dashboard page
@@ -43,8 +54,12 @@ if (testForm) {
   let params = (new URL(document.location)).searchParams;
   const testId = params.get(urlRef);
 
+  let testData;
+
+  // GET test data
   getSingleTest(testId)
     .then(test => {
+      testData = test;
 
       // Dynamically create form to allow for varying question numbers
       for (let i = 1; i <= test.questions.length; i++) {
@@ -84,49 +99,27 @@ if (testForm) {
       testForm.appendChild(submitBtn);
     })
     .catch(err => console.log('Error rendering testForm data:', err));
+
+
+  // POST answers
+  testForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    let answerArr = [];
+
+    for (let i = 1; i <= testData.questions.length; i++) {
+      const radioBtns = testForm.querySelectorAll(`input[name="question${i}"]`);
+
+      for (let rb of radioBtns) {
+        if (rb.checked) {
+          answerArr.push(rb.value);
+          break;
+        }
+      }
+    }
+
+    postAnswers(testId, answerArr)
+      .then(() => window.location.href = './student.html')
+      .catch(err => console.log('Error posting answers:', err));
+  });
 }
-  //   let test;
-
-  //   db.collection('tests').doc(testId).get()
-  //     .then(doc => {
-  //       test = doc.data();
-
-
-  //     })
-  //     .catch(error => {
-  //       console.log('Error getting test data: ', error);
-  //     });
-
-  //   // Submit to Firestore
-  //   testForm.addEventListener('submit', e => {
-  //     e.preventDefault();
-
-  //     let answerArr = [];
-
-  //     for (let i = 1; i <= test.questions.length; i++) {
-  //       const radioBtns = testForm.querySelectorAll(`input[name="question${i}"]`);
-
-  //       for (let rb of radioBtns) {
-  //         if (rb.checked) {
-  //           answerArr.push(rb.value);
-  //           break;
-  //         }
-  //       }
-  //     }
-
-  //     let dbObj = {};
-  //     dbObj[`${studentId}`] = {}
-  //     dbObj[`${studentId}`].answers = answerArr
-
-  //     db.collection(`tests`).doc(testId).set({
-  //       studentsCompleted: dbObj,
-  //     }, {merge: true})
-  //     .then(() => {
-  //       console.log('Updated successfully');
-
-  //       // window.location.href='./student.html';
-
-  //     })
-  //     .catch(error => console.log('Error updating database: ', error));
-  //   });
-  // }

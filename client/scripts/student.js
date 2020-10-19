@@ -27,8 +27,7 @@ const postAnswers = (testId, answerArr) => {
 
 
 // Dashboard page
-const testList = document.getElementById('test-list');
-if (testList) {
+const renderTests = () => {
   getLiveTests()
     .then(data => {
       data.forEach(test => {
@@ -44,8 +43,22 @@ if (testList) {
       });
     })
     .catch(err => console.log('Error rendering testList data:', err));
+};
+
+const testList = document.getElementById('test-list');
+if (testList) {
+  renderTests();
+
+  // Refresh button
+  const refreshBtn = document.getElementById('refresh');
+  refreshBtn.addEventListener('click', () => {
+    testList.innerHTML = '';
+    renderTests();
+  });
 }
 
+
+// Test page
 const testForm = document.getElementById('test');
 if (testForm) {
   let params = (new URL(document.location)).searchParams;

@@ -31,9 +31,7 @@ function toggleLive() {
 
 
 // Dashboard page
-const testList = document.getElementById('test-list');
-if (testList) {
-  // Fetch all tests
+const renderTests = () => {
   getAllTests()
     .then(data => {
       data.forEach(test => {
@@ -67,6 +65,17 @@ if (testList) {
       });
     })
     .catch(err => console.log('Error rendering tests in getAllTests(): ', err));
+};
+
+const testList = document.getElementById('test-list');
+if (testList) {
+  renderTests();
+
+  const refreshBtn = document.getElementById('refresh');
+  refreshBtn.addEventListener('click', () => {
+    testList.innerHTML = '';
+    renderTests();
+  });
 }
 
 // Add test page

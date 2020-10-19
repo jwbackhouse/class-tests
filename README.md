@@ -18,7 +18,7 @@ Although written as a Node/Express REST API, this could equally work as an entir
 
 ## To note
 1. Given the brief, the database currently expects exactly 10 questions per test, each with 4 answers. However, the front end only renders questions/answers that contain content so it handles empty fields gracefully. This could obviously be easily changed if necessary.
-2. As a mock-up, user authentication has not been implemented. To use the app as different users, simply change the `studentId` variable in client/scripts/server.js (in prodution this would be accessed via the auth token).
+2. As a mock-up, user authentication has not been implemented. To use the app as different users, simply change the `studentId` variable in client/scripts/server.js (in prodution this would be accessed via the auth token, and allow teachers to see student names not just IDs).
 3. Please don't judge the front end styling!
 4. No automated testing implemeted at this stage.
 

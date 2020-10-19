@@ -38,7 +38,7 @@ if (testList) {
     .then(data => {
       data.forEach(test => {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`${test.data.title} - live:`));
+        li.appendChild(document.createTextNode(test.data.title));
 
         const checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
@@ -90,7 +90,7 @@ if (testForm) {
     };
 
     postNewTest(newTest)
-      .then(data => console.log('Test added successfully with ID:', data))
+      .then(data => window.location.href = './teacher.html')
       .catch(err => console.log('Error posting new test', err));
   });
 }

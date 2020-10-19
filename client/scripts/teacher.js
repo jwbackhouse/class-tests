@@ -5,7 +5,19 @@ const getAllTests = () => {
     .catch(err => console.log('Error fetching data in getAllTests()', err));
 };
 
+const postNewTest = testData => {
+  const body = JSON.stringify(testData);
+  return fetch('/teacher/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    })
+    .then(res => res.json())
+    .catch(err => console.log('Error posting new test in postNewTest():', err));
+};
 
+
+// Dashboard page
 const testList = document.getElementById('test-list');
 if (testList) {
   getAllTests()
@@ -19,54 +31,42 @@ if (testList) {
     .catch(err => console.log('Error rendering tests in getAllTests(): ', err));
 }
 
+// Add test page
+const testForm = document.getElementById('test-form');
+if (testForm) {
+  testForm.addEventListener('submit', e => {
+    e.preventDefault();
 
+    const title = testForm.querySelector('#test-title').value;
+    const allFieldsetEls = testForm.querySelectorAll('fieldset');
+    let allQuestions = [];
 
-// const testForm = document.getElementById('test-form');
-// if (testForm) {
-//   testForm.addEventListener('submit', e => {
-//     e.preventDefault();
+    for (let i = 0; i < allFieldsetEls.length; i++) {
+      const qNum = i + 1;
+      const answers = [];
 
-//     const q1Answers = [
-//       testForm.querySelector('#q1-ans-1').value,
-//       testForm.querySelector('#q1-ans-2').value,
-//       testForm.querySelector('#q1-ans-3').value,
-//       testForm.querySelector('#q1-ans-4').value,
-//     ];
-//     const q2Answers = [
-//       testForm.querySelector('#q2-ans-1').value,
-//       testForm.querySelector('#q2-ans-2').value,
-//       testForm.querySelector('#q2-ans-3').value,
-//       testForm.querySelector('#q2-ans-4').value,
-//     ];
+      const question = allFieldsetEls[i].querySelector(`#q${qNum}-question`).value;
+      answers.push(allFieldsetEls[i].querySelector(`#q${qNum}-ans-1`).value);
+      answers.push(allFieldsetEls[i].querySelector(`#q${qNum}-ans-2`).value);
+      answers.push(allFieldsetEls[i].querySelector(`#q${qNum}-ans-3`).value);
+      answers.push(allFieldsetEls[i].querySelector(`#q${qNum}-ans-4`).value);
+      const correct = allFieldsetEls[i].querySelector(`#q${qNum}-correct`).value;
 
-//     const formData = [{
-//       title: testForm.querySelector('#q1-title').value,
-//       answers: q1Answers,
-//       correct: testForm.querySelector('#q1-correct').value,
-//     }, {
-//       title: testForm.querySelector('#q2-title').value,
-//       answers: q2Answers,
-//       correct: testForm.querySelector('#q2-correct').value,
-//     }];
+      allQuestions.push({
+        question,
+        answers,
+        correct: +correct,
+      });
+    }
 
-//     const testTitle = testForm.querySelector('#test-title').value;
+    const newTest = {
+      title,
+      questions: allQuestions,
+      live: false,
+    };
 
-//     addTest(formData, testTitle);
-//   });
-// }
-
-// const addTest = (questions, title) => {
-//   db.collection('tests').add({
-//       title,
-//       questions,
-//       studentsCompleted: [], // Not necessary to add here
-//       live: true,
-//     })
-//     .then(docRef => {
-//       console.log(`Document written successfully with ID: ${docRef.id}`);
-//       window.location.href = './teacher.html';
-//     })
-//     .catch(error => {
-//       console.error('Error adding document: ', error);
-//     });
-// };
+    postNewTest(newTest)
+      .then(data => console.log('Test added successfully with ID:', data))
+      .catch(err => console.log('Error posting new test', err));
+  });
+}

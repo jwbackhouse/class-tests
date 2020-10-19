@@ -165,7 +165,7 @@ exports.addTest_post = (req, res) => {
   db.collection('tests').add(newTest)
     .then(docRef => {
       console.log(`Document written successfully with ID: ${docRef.id}`);
-      res.send(newTest);
+      res.json(docRef.id);
     })
     .catch(err => {
       console.error('Error adding test in addTest_post(): ', err);

@@ -62,7 +62,7 @@ if (testForm) {
       for (let i = 1; i <= test.questions.length; i++) {
         const questionData = test.questions[i - 1];
         const question = document.createElement('p');
-        question.innerHTML = `Question ${i}: ${questionData.title}`;
+        question.innerHTML = `Question ${i}: ${questionData.question}`;
 
         const answerDiv = document.createElement('div');
         answerDiv.setAttribute('class', 'answers');

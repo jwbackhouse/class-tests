@@ -26,7 +26,6 @@ router.post('/student/:studentId/:testId', [
         .isAlphanumeric(),
     body('answers')
         .exists()
-        .escape()
         .isArray()
     ], controller.test_post);
 

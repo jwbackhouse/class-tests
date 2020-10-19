@@ -1,17 +1,24 @@
 // Student Front-End
 
+// Assume studentId would come from auth (not implemeted in this mock-up)
 const studentId = 123;
 const urlRef = 'testId';
 
-const getLiveTests = async () => {
+// API requests
+const getLiveTests = () => {
   return fetch(`/student/${studentId}`)
     .then(res => res.json())
     .catch(err => console.log('Error fetching data in getLiveTests()', err));
 };
 
+const getSingleTest = testId => {
+  return fetch(`/test/${testId}`)
+    .then(res => res.json())
+    .catch(err => console.log('Error fetching data in getSingleTest()', err));
+}
 
 
-// // Dashboard page
+// Dashboard page
 const testList = document.getElementById('test-list');
 if (testList) {
   getLiveTests()
@@ -28,105 +35,98 @@ if (testList) {
         testList.appendChild(li);
       });
     })
-    .catch(err => console.log('Error parsing testList data:', err));
-
-
-  // db.collection("tests")
-  //   .where('live', '==', true)
-  //   .get()
-  //   .then((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       const completed = doc.data().studentsCompleted.includes(studentId);
-
-  //     });
-  //   })
-  //   .catch(error => {
-  //     console.log('Error getting test list: ', error);
-  //   });
+    .catch(err => console.log('Error rendering testList data:', err));
 }
 
-// const testForm = document.getElementById('test');
-// if (testForm) {
-//   let params = (new URL(document.location)).searchParams;
-//   const testId = params.get(urlRef);
+const testForm = document.getElementById('test');
+if (testForm) {
+  let params = (new URL(document.location)).searchParams;
+  const testId = params.get(urlRef);
 
-//   let test;
+  getSingleTest(testId)
+    .then(test => {
 
-//   db.collection('tests').doc(testId).get()
-//     .then(doc => {
-//       test = doc.data();
+      // Dynamically create form to allow for varying question numbers
+      for (let i = 1; i <= test.questions.length; i++) {
+        const questionData = test.questions[i - 1];
+        const question = document.createElement('p');
+        question.innerHTML = `Question ${i}: ${questionData.title}`;
 
+        const answerDiv = document.createElement('div');
+        answerDiv.setAttribute('class', 'answers');
 
-//       for (let i = 1; i <= test.questions.length; i++) {
-//         const questionData = test.questions[i - 1];
-//         const question = document.createElement('p');
-//         question.innerHTML = `Question ${i}: ${questionData.title}`;
+        for (let j = 0; j < 4; j++) {
+          const answer = document.createElement('input');
+          answer.setAttribute('type', 'radio');
+          answer.setAttribute('name', `question${i}`);
+          answer.setAttribute('id', `q${i}-ans${j}`);
+          answer.setAttribute('value', questionData.answers[j]);
 
-//         const answerDiv = document.createElement('div');
-//         answerDiv.setAttribute('class', 'answers');
+          const label = document.createElement('label');
+          label.setAttribute('for', `q${i}-ans${j}`);
+          label.innerHTML = questionData.answers[j];
 
-//         for (let j = 0; j < 4; j++) {
-//           const answer = document.createElement('input');
-//           answer.setAttribute('type', 'radio');
-//           answer.setAttribute('name', `question${i}`);
-//           answer.setAttribute('id', `q${i}-ans${j}`);
-//           answer.setAttribute('value', questionData.answers[j]);
-
-//           const label = document.createElement('label');
-//           label.setAttribute('for', `q${i}-ans${j}`);
-//           label.innerHTML = questionData.answers[j];
-
-//           answerDiv.appendChild(label);
-//           answerDiv.appendChild(answer);
-//           answerDiv.appendChild(document.createElement('br'));
-//         }
+          answerDiv.appendChild(label);
+          answerDiv.appendChild(answer);
+          answerDiv.appendChild(document.createElement('br'));
+        }
 
 
-//         testForm.appendChild(question);
-//         testForm.appendChild(answerDiv);
-//         testForm.appendChild(document.createElement('br'));
-//       }
+        testForm.appendChild(question);
+        testForm.appendChild(answerDiv);
+        testForm.appendChild(document.createElement('br'));
+      }
 
-//       const submitBtn = document.createElement('input');
-//       submitBtn.setAttribute('type', 'submit');
-//       submitBtn.setAttribute('value', 'Submit');
+      const submitBtn = document.createElement('input');
+      submitBtn.setAttribute('type', 'submit');
+      submitBtn.setAttribute('value', 'Submit');
 
-//       testForm.appendChild(submitBtn);
-//     })
-//     .catch(error => {
-//       console.log('Error getting test data: ', error);
-//     });
+      testForm.appendChild(submitBtn);
+    })
+    .catch(err => console.log('Error rendering testForm data:', err));
+}
+  //   let test;
 
-//   // Submit to Firestore
-//   testForm.addEventListener('submit', e => {
-//     e.preventDefault();
+  //   db.collection('tests').doc(testId).get()
+  //     .then(doc => {
+  //       test = doc.data();
 
-//     let answerArr = [];
 
-//     for (let i = 1; i <= test.questions.length; i++) {
-//       const radioBtns = testForm.querySelectorAll(`input[name="question${i}"]`);
+  //     })
+  //     .catch(error => {
+  //       console.log('Error getting test data: ', error);
+  //     });
 
-//       for (let rb of radioBtns) {
-//         if (rb.checked) {
-//           answerArr.push(rb.value);
-//           break;
-//         }
-//       }
-//     }
+  //   // Submit to Firestore
+  //   testForm.addEventListener('submit', e => {
+  //     e.preventDefault();
 
-//     let dbObj = {};
-//     dbObj[`${studentId}`] = {}
-//     dbObj[`${studentId}`].answers = answerArr
+  //     let answerArr = [];
 
-//     db.collection(`tests`).doc(testId).set({
-//       studentsCompleted: dbObj,
-//     }, {merge: true})
-//     .then(() => {
-//       console.log('Updated successfully');
+  //     for (let i = 1; i <= test.questions.length; i++) {
+  //       const radioBtns = testForm.querySelectorAll(`input[name="question${i}"]`);
 
-//       // window.location.href='./student.html';
+  //       for (let rb of radioBtns) {
+  //         if (rb.checked) {
+  //           answerArr.push(rb.value);
+  //           break;
+  //         }
+  //       }
+  //     }
 
-//     })
-//     .catch(error => console.log('Error updating database: ', error));
-//   });
-// }
+  //     let dbObj = {};
+  //     dbObj[`${studentId}`] = {}
+  //     dbObj[`${studentId}`].answers = answerArr
+
+  //     db.collection(`tests`).doc(testId).set({
+  //       studentsCompleted: dbObj,
+  //     }, {merge: true})
+  //     .then(() => {
+  //       console.log('Updated successfully');
+
+  //       // window.location.href='./student.html';
+
+  //     })
+  //     .catch(error => console.log('Error updating database: ', error));
+  //   });
+  // }

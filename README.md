@@ -11,6 +11,33 @@ The app is built using a Node/Express REST API, with a **very** simple (complete
 <br />
 Data is stored in Firebase's [Cloud Firestore](https://firebase.google.com/docs/firestore). A [Cloud Function](https://firebase.google.com/docs/functions) triggers in the background whenever a student submits a test, which calculates their score and updates Firestore.
 
+#### Cloud Firestore schema
+```sh
+tests (collection)
+  |
+  ├── {{docId}} ├── questions: [{
+  |             |                 answers: ["Err...","Dunno","Mars","Just outside"],
+  |             |                 question: "Where's Wally",
+  |             |                 correct: 1
+  |             |               }, { ... }]
+  |             |
+  |             ├─ title: 'Test one'
+  |             |
+  |             ├─ live: true
+  |             |
+  |             ├─ studentsCompleted: [{
+  |                                      {{studentId}}: {
+  |                                          answers: [0, 1, 3, ...]
+  |                                          score: 4
+  |                                      },
+  |                                      {{studentId}}: { ... }
+  |                                   }]
+  |
+  ├── {{docId}} ─── etc.
+  |
+```
+
+
 #### Alternative approach
 Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions.
 <br />
@@ -27,4 +54,4 @@ Although written as a Node/Express REST API, this could equally work as an entir
 ```sh
 $ npm run dev
 ```
-Launch Express server.
+Launch Express server

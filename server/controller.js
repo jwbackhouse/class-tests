@@ -31,10 +31,14 @@ exports.studentTests_get = async(req, res) => {
         }
 
         testArr.push({
-        [`test${i}`]: resultArr[i].data(),
+          testData: {
+            id: resultArr[i].id,
+            ...resultArr[i].data(),
+          },
           completed,
         });
       }
+
       res.send(testArr);
     })
     .catch(error => {

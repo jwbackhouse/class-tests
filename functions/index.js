@@ -1,3 +1,6 @@
+// Firebase Cloud Function
+// Calculates score when new answers added to a test
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -5,6 +8,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+// Listen for changes in Firestore
 exports.calcScore = functions.firestore
   .document('tests/{docId}')
   .onUpdate((change, context) => {

@@ -40,7 +40,7 @@ I have used a nested object approach, but if the app was used with very large nu
 
 
 #### Alternative approach
-Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions. If the app is destined for large fluctuations in usage this would likely be the most efficient approach.
+Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions. If the app is destined for large fluctuations in usage this would likely be the most cost-efficient approach as it avoids the need to maintain large static server capacity.
 <br />
 (* or sub in AWS / Azure equivalents)
 

@@ -9,7 +9,7 @@ Once the teacher sets the tests live, they are visible to students. Once at stud
 The app is built using a Node/Express REST API, with a **very** simple (completely unstyled) front end mocked up just to show the endpoints in action.
 <br />
 <br />
-Data is stored in Firebase's [Cloud Firestore](https://firebase.google.com/docs/firestore). A [Cloud Function](https://firebase.google.com/docs/functions) triggers in the background whenever a student submits a test, which calculates their score and updates Firestore.
+Data is stored in Firebase's [Cloud Firestore](https://firebase.google.com/docs/firestore). A [Cloud Function](https://firebase.google.com/docs/functions) (functions/index.js) triggers in the background whenever a student submits a test, which calculates their score and updates Firestore.
 
 #### Cloud Firestore schema
 ```sh
@@ -40,7 +40,7 @@ I have used a nested object approach, but if the app was used with very large nu
 
 
 #### Alternative approach
-Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions. If the app is destined for large fluctuations in usage this would likely be the most efficient approach.
+Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions. If the app is destined for large fluctuations in usage this would likely be the most cost-efficient approach as it avoids the need to maintain large static server capacity.
 <br />
 (* or sub in AWS / Azure equivalents)
 

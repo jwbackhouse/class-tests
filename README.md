@@ -36,10 +36,11 @@ tests (collection)
   ├── {{docId}} ─── etc.
   |
 ```
+I have used a nested object approach, but if the app was used with very large numbers of students (e.g. a Udemy course) then the studentsCompleted object should be swapped for a sub-collection to avoid the document becoming too large
 
 
 #### Alternative approach
-Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions.
+Although written as a Node/Express REST API, this could equally work as an entirely serverless app using the GCP* API Gateway to handle HTTP requests with Cloud Functions* in place of controller functions. If the app is destined for large fluctuations in usage this would likely be the most efficient approach.
 <br />
 (* or sub in AWS / Azure equivalents)
 
